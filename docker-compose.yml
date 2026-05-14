@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  fleet_bot:
+    build: .
+    container_name: fleet_bot_app
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./fleet.db:/app/fleet.db
