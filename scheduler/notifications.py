@@ -30,15 +30,23 @@ def _check_expiring_vehicles(
     logger.info("%d vehicle(s) require attention.", len(vehicles))
 
     async def _send_all() -> None:
+        from utils.state import chat_alert_messages
+        from handlers.search import _vehicle_action_keyboard
+
         header = (
             f"📋 <b>Щоденний звіт автопарку</b>  —  "
             f"потребують уваги: <b>{len(vehicles)}</b>\n"
         )
-        await bot.send_message(admin_chat_id, header, parse_mode="HTML")
+        msg1 = await bot.send_message(admin_chat_id, header, parse_mode="HTML")
+        msg_ids = [msg1.message_id]
 
         for v in vehicles:
             text = notification_message(v)
-            await bot.send_message(admin_chat_id, text, parse_mode="HTML")
+            kb = _vehicle_action_keyboard(v["plate"])
+            msg = await bot.send_message(admin_chat_id, text, parse_mode="HTML", reply_markup=kb)
+            msg_ids.append(msg.message_id)
+
+        chat_alert_messages[admin_chat_id] = msg_ids
 
     future = asyncio.run_coroutine_threadsafe(_send_all(), loop)
     try:

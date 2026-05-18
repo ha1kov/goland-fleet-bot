@@ -65,12 +65,21 @@ async def cmd_alerts(message: Message, db_path) -> None:
         )
         return
 
-    await message.answer(
+    msg1 = await message.answer(
         f"📋 <b>Перевірка ТО</b>\n"
         f"Потребують уваги: <b>{len(vehicles)}</b>\n"
         f"Період попередження: <b>{settings.to_warn_days}</b> дн.",
         parse_mode="HTML",
     )
 
+    from utils.state import chat_alert_messages
+    from handlers.search import _vehicle_action_keyboard
+    
+    msg_ids = [message.message_id, msg1.message_id]
+
     for vehicle in vehicles:
-        await message.answer(notification_message(vehicle), parse_mode="HTML")
+        kb = _vehicle_action_keyboard(vehicle["plate"])
+        msg = await message.answer(notification_message(vehicle), parse_mode="HTML", reply_markup=kb)
+        msg_ids.append(msg.message_id)
+
+    chat_alert_messages[message.chat.id] = msg_ids

@@ -91,13 +91,24 @@ async def cb_edit_start(
     await state.set_state(EditDate.waiting_for_date)
     await state.update_data(plate=plate, field=field)
 
-    await callback.message.answer(
+    from utils.state import chat_alert_messages
+    chat_id = callback.message.chat.id
+    if chat_id in chat_alert_messages and callback.message.message_id in chat_alert_messages[chat_id]:
+        for msg_id in chat_alert_messages[chat_id]:
+            try:
+                await callback.bot.delete_message(chat_id, msg_id)
+            except Exception:
+                pass
+        chat_alert_messages.pop(chat_id, None)
+
+    msg = await callback.message.answer(
         f"✏️ Редагування поля <b>{label}</b> для авто <code>{plate}</code>\n\n"
         f"Надішліть нову дату у форматі <code>YYYY-MM-DD</code>\n"
         f"<i>Приклад: 2026-06-15</i>",
         parse_mode="HTML",
         reply_markup=_cancel_keyboard(plate),
     )
+    await state.update_data(prompt_msg_id=msg.message_id)
 
 
 @router.callback_query(F.data.startswith("edit_cancel:"))
@@ -165,7 +176,16 @@ async def handle_new_date(
         await state.clear()
         return
 
+    prompt_msg_id = data.get("prompt_msg_id")
     await state.clear()
+
+    try:
+        if prompt_msg_id:
+            await message.bot.delete_message(message.chat.id, prompt_msg_id)
+        await message.delete()
+    except Exception:
+        pass
+
     logger.info("Updated %s for %s → %s", field, plate, raw)
 
     vehicle = get_vehicle_by_plate(db_path, plate)
