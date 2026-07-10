@@ -13,6 +13,7 @@ router = Router()
 MAIN_KEYBOARD = ReplyKeyboardMarkup(
     keyboard=[
         [KeyboardButton(text="🔍 Знайти авто")],
+        [KeyboardButton(text="➕ Додати авто")],
         [KeyboardButton(text="⏰ Перевірити ТО")],
         [KeyboardButton(text="📋 Допомога")],
     ],
@@ -24,7 +25,8 @@ HELP_TEXT = (
     "Доступні команди:\n"
     "• /start — показати головне меню\n"
     "• /help — показати допомогу\n"
-    "• /search — знайти авто за номером\n\n"
+    "• /search — знайти авто за номером\n"
+    "• /add — додати нове авто\n\n"
     "• /alerts — перевірити прострочені або близькі до завершення ТО\n\n"
     "<b>Як користуватися:</b>\n"
     "1️⃣  Натисніть <b>🔍 Знайти авто</b> або введіть <code>/search НОМЕР</code>\n"

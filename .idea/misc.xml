@@ -3,8 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.11 (files)" />
   </component>
-  <component name="GithubDefaultAccount">
-    <option name="defaultAccountId" value="3e649373-b4c6-4450-b7f8-1180cabfe4d5" />
-  </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (GOLAND_ERP)" project-jdk-type="Python SDK" />
 </project>

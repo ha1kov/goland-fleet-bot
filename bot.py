@@ -12,7 +12,7 @@ from aiogram.types import BotCommand
 
 from config import settings
 from db.models import init_db
-from handlers import common, edit, search
+from handlers import common, edit, search, add
 from scheduler.notifications import build_scheduler
 from utils.importer import import_xlsx
 
@@ -43,6 +43,7 @@ BOT_COMMANDS = [
     BotCommand(command="start",  description="Головне меню"),
     BotCommand(command="help",   description="Допомога та інструкції"),
     BotCommand(command="search", description="Пошук авто за номером"),
+    BotCommand(command="add",    description="Додати нове авто"),
     BotCommand(command="alerts", description="Перевірити прострочені ТО"),
 ]
 
@@ -63,6 +64,7 @@ async def main() -> None:
     dp.callback_query.middleware(DbPathMiddleware())
 
     dp.include_router(common.router)
+    dp.include_router(add.router)
     dp.include_router(edit.router)
     dp.include_router(search.router)
 
