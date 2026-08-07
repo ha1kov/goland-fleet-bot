@@ -44,6 +44,10 @@ def _vehicle_action_keyboard(plate: str) -> InlineKeyboardMarkup:
                     text="🔄 Оновити",
                     callback_data=f"view:{plate}",
                 ),
+                InlineKeyboardButton(
+                    text="🗑️ Видалити",
+                    callback_data=f"delete:{plate}",
+                ),
             ],
         ]
     )

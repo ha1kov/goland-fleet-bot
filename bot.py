@@ -12,7 +12,7 @@ from aiogram.types import BotCommand
 
 from config import settings
 from db.models import init_db
-from handlers import common, edit, search, add
+from handlers import common, edit, search, add, delete
 from scheduler.notifications import build_scheduler
 from utils.importer import import_xlsx
 
@@ -67,6 +67,7 @@ async def main() -> None:
     dp.include_router(add.router)
     dp.include_router(edit.router)
     dp.include_router(search.router)
+    dp.include_router(delete.router)
 
     loop = asyncio.get_event_loop()
     scheduler = build_scheduler(

@@ -16,6 +16,13 @@ def get_vehicle_by_plate(db_path: Path, plate: str) -> Optional[Vehicle]:
             "SELECT * FROM vehicles WHERE plate = ?", (plate,)
         ).fetchone()
     return row
+def delete_vehicle_by_plate(db_path: Path, plate: str) -> bool:
+    with get_connection(db_path) as conn:
+        cursor = conn.execute(
+            "DELETE FROM vehicles WHERE plate = ?", (plate.upper(),)
+        )
+        conn.commit()
+        return cursor.rowcount > 0
 
 
 def search_vehicles_by_plate(db_path: Path, query: str) -> list[Vehicle]:
